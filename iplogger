@@ -1,0 +1,37 @@
+import requests
+import uuid
+
+def generate_link():
+    # Generate a unique ID for the link
+    link_id = str(uuid.uuid4())
+
+    # Create a request to a server that will log the IP address
+    url = f"http://iplogger.org/track/{link_id}"
+    response = requests.get(url)
+
+    # Extract the link from the response
+    link = response.text.split("href=\"")[1].split("\"")[0]
+
+    return link
+
+def get_ip_address(link_id):
+    # Make a request to the server to get the IP address
+    url = f"http://iplogger.org/track/{link_id}/ip"
+    response = requests.get(url)
+
+    # Extract the IP address from the response
+    ip_address = response.text.strip()
+
+    return ip_address
+
+# Generate a link
+link = generate_link()
+print(f"Link: {link}")
+
+# Wait for someone to open the link
+input("Press Enter when someone opens the link...")
+
+# Get the IP address
+link_id = link.split("/")[-1]
+ip_address = get_ip_address(link_id)
+print(f"IP Address: {ip_address}")
